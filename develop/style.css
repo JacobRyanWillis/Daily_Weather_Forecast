@@ -6,8 +6,9 @@
 
 header {
     font-size: 5rem;
-    background-color: rgb(23, 23, 228);
+    background: linear-gradient(to right bottom, rgb(36, 36, 136), lightblue);
     color: white;
+    
 }
 
 h1 {
@@ -47,5 +48,7 @@ p {
 }
 
 button:hover {
-    color: blue;
+    background-color: rgb(95, 95, 199); 
+    color: white; 
+    transition: .75s;
 }
