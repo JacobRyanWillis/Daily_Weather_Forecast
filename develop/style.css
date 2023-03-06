@@ -42,3 +42,10 @@ p {
     font-size: 2rem;
 }
 
+#cityHistory {
+    margin-top: 2rem;
+}
+
+button:hover {
+    color: blue;
+}

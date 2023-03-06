@@ -4,7 +4,15 @@ var daysForecast = $('#daysForecast');
 var apiKey = '9ed22dc3c627d4dc3ee512f267df50e4';
 var todaysDate = $('#todaysDate');
 var fiveDayForecast = $('#fiveDayForecast');
+var historyBtn = $('#cityHistory')
 var localStorageArray = JSON.parse(localStorage.getItem('cityInput')) || [];
+
+function init() {
+    for (var i = 0; i < localStorageArray.length; i++) {
+        var buttonEl = $('<button>').text(localStorageArray[i]);
+        historyBtn.append(buttonEl);
+        };
+    }
 
 async function getGeocodingData(cityName) {
     var url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
@@ -14,12 +22,12 @@ async function getGeocodingData(cityName) {
     return data;
 }
 
-async function getCityWeather(lat, lon) {
+async function get5DayForecast(lat, lon) {
     var url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
     var response = await fetch(url);
     var data = await response.json();
     console.log(data);
-    for (var i = 0; i < data.list.length; i += 8) {
+    for (var i = 7; i < data.list.length; i += 8) {
         var day = data.list[i];
         var dt_txt = day.dt_txt;
         var date = new Date(dt_txt);
@@ -68,9 +76,7 @@ async function getCurrentWeather(lat, lon) {
 function storeCity(city) {
     if (!localStorageArray.includes(city)) {
         localStorageArray.push(city);
-        
     }
-
     localStorage.setItem('cityInput', JSON.stringify(localStorageArray));
 }
 
@@ -79,24 +85,58 @@ function formatCityName(cityName) {
     return cityName.charAt(0).toUpperCase() + cityName.slice(1).toLowerCase();
   }
 
-searchBtn.on('click', function() {
+  historyBtn.on('click', 'button', function() {
+    todaysDate.empty();
+    fiveDayForecast.empty();
+    var cityName = $(this).text();
+    cityName = formatCityName(cityName);
+    getGeocodingData(cityName)
+    .then(function(data) {
+      var lat = data[0].lat;
+      var lon = data[0].lon;
+      return get5DayForecast(lat, lon) && getCurrentWeather(lat,lon);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  });
+
+  searchBtn.on('click', function() {
     todaysDate.empty();
     fiveDayForecast.empty();
     var cityName = cityInput.val();
     if(cityName === '') {
         alert('Please enter a City Name.')
     } else {
-    cityName = formatCityName(cityName);
-    getGeocodingData(cityName)
-    .then(function(data) {
-       var lat = data[0].lat;
-       var lon = data[0].lon;
-       console.log(lat);
-       console.log(lon);
-       storeCity(cityName);
-       return getCityWeather(lat, lon) && getCurrentWeather(lat,lon);
+        cityName = formatCityName(cityName);
+        getGeocodingData(cityName)
+        .then(function(data) {
+            var lat = data[0].lat;
+            var lon = data[0].lon;
+            var buttonExists = false;
+            // check if button already exists
+            historyBtn.children().each(function() {
+                if ($(this).text() === cityName) {
+                    buttonExists = true;
+                }
+            });
+            // append button if it doesn't exist
+            if (!buttonExists) {
+                var buttonEl = $('<button>').text(cityName);
+                historyBtn.append(buttonEl);
+                // add click event to button to show weather for that city
+                buttonEl.on('click', function() {
+                    get5DayForecast(lat, lon);
+                    getCurrentWeather(lat, lon);
+                });
+                storeCity(cityName);
+            }
+            return get5DayForecast(lat, lon) && getCurrentWeather(lat,lon);
         })
-    .catch(function(error) {
-        console.log(error);
-    })};
+        .catch(function(error) {
+            console.log(error);
+        });
+    }
 });
+
+init ();
