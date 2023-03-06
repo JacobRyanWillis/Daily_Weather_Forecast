@@ -1,0 +1,44 @@
+/* changes font-size to 10px making it easier to work with. */
+* {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 62.5%;
+}
+
+header {
+    font-size: 5rem;
+    background-color: rgb(23, 23, 228);
+    color: white;
+}
+
+h1 {
+    font-size: 5rem;
+}
+
+h2 {
+    font-size: 4.5rem;
+}
+
+h3 {
+    font-size: 4rem;
+}
+
+h4 {
+    font-size: 3.5rem;
+}
+
+h5 {
+    font-size: 3rem;
+}
+
+section input, button {
+    font-size: 2rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    height: 4rem;
+    border-radius: 1rem;
+}
+
+p {
+    font-size: 2rem;
+}
+
