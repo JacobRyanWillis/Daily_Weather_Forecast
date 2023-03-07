@@ -16,7 +16,7 @@ function init() {
     }
 
     async function getGeocodingData(cityName) {
-        var url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
+        var url = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
         var response = await fetch(url);
         var data = await response.json();
         console.log(data);
@@ -28,7 +28,7 @@ function init() {
     
 
 async function get5DayForecast(lat, lon) {
-    var url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
+    var url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
     var response = await fetch(url);
     var data = await response.json();
     console.log(data);
@@ -39,7 +39,7 @@ async function get5DayForecast(lat, lon) {
         var date = new Date(dt_txt);
         var formattedDate = dayjs(date).format('MM/DD/YYYY');
         var iconCode = day.weather[0].icon;
-        var iconUrl = `http://openweathermap.org/img/w/${iconCode}.png`;
+        var iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
         var icon = $('<img>').attr('src', iconUrl);
         var wind = day.wind.speed;
         var humidity = day.main.humidity;
@@ -67,7 +67,7 @@ async function getCurrentWeather(lat, lon) {
     var currentDate = new Date();
     var formattedDate = dayjs(currentDate).format('MM/DD/YYYY');
     var iconCode = data.weather[0].icon;
-    var iconUrl = `http://openweathermap.org/img/w/${iconCode}.png`;
+    var iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
     var icon = $('<img>').attr('src', iconUrl);
     todaysDate.append(data.name + " " + formattedDate + " ").append(icon);
     var wind = data.wind.speed;
